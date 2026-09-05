@@ -42,4 +42,5 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)
     implementation("com.airbnb.android:lottie:6.7.1")
+    implementation("com.github.f0ris.sweetalert:library:1.6.2")
 }
