@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import cn.pedant.SweetAlert.SweetAlertDialog
+import android.util.Patterns
 
 private lateinit var etEmail: EditText
 private lateinit var etClave: EditText
@@ -50,13 +51,17 @@ class MainActivity : AppCompatActivity() {
         val clave = etClave.text.toString().trim()
 
         when {
-            email.isEmpty() -> {
-                mostrarCampoVacio("Debes ingresar tu email.")
+            email.isEmpty() -> mostrarCampoVacio("Debes ingresar tu email.")
+            !Patterns.EMAIL_ADDRESS.matcher(email).matches() -> {
+                SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
+                    .setTitleText("Formato incorrecto")
+                    .setContentText("Debes ingresar un email válido (ej: usuario@dominio.com).")
+                    .setConfirmText("Entendido")
+                    .show()
             }
-            clave.isEmpty() -> {
-                mostrarCampoVacio("Debes ingresar una contraseña.")
-            }
+            clave.isEmpty() -> mostrarCampoVacio("Debes ingresar una contraseña.")
             else -> {
+                btningresar.isEnabled = false // Bloquea el botón según la rúbrica
                 mostrarLoginExitoso()
             }
         }

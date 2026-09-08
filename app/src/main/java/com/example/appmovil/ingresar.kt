@@ -1,6 +1,7 @@
 package com.example.appmovil
 
 import android.os.Bundle
+import android.util.Patterns
 import android.widget.Button
 import android.widget.EditText
 import androidx.activity.enableEdgeToEdge
@@ -48,30 +49,37 @@ class ingresar : AppCompatActivity() {
         val clave = etClave.text.toString().trim()
 
         when {
-            rut.isEmpty() -> {
-                mostrarCampoVacio("Debes ingresar tu Rut.")
+            rut.isEmpty() -> mostrarCampoVacio("Debes ingresar tu Rut.")
+            nombres.isEmpty() -> mostrarCampoVacio("Debes ingresar tus nombres.")
+            apellidos.isEmpty() -> mostrarCampoVacio("Debes ingresar tus apellidos.")
+            email.isEmpty() -> mostrarCampoVacio("Debes ingresar tu email.")
+            !Patterns.EMAIL_ADDRESS.matcher(email).matches() -> {
+                mostrarError("El formato del correo electrónico no es válido.")
             }
-            nombres.isEmpty() -> {
-                mostrarCampoVacio("Debes ingresar tus nombres.")
+            clave.isEmpty() -> mostrarCampoVacio("Debes ingresar una contraseña.")
+            !esClaveRobusta(clave) -> {
+                mostrarError("La contraseña debe contener mínimo 8 caracteres, 1 mayúscula, 1 minúscula, 1 número y 1 carácter especial.")
             }
-            apellidos.isEmpty() -> {
-                mostrarCampoVacio("Debes ingresar tus apellidos.")
-            }
-            email.isEmpty() -> {
-                mostrarCampoVacio("Debes ingresar tu email.")
-            }
-            clave.isEmpty() -> {
-                mostrarCampoVacio("Debes ingresar una contraseña.")
-            }
-            else -> {
-                mostrarIngresoExitoso()
-            }
+            else -> mostrarIngresoExitoso()
         }
+    }
+
+    private fun esClaveRobusta(clave: String): Boolean {
+        val regex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@\$!%*?&#._-]).{8,}\$".toRegex()
+        return regex.matches(clave)
     }
 
     private fun mostrarCampoVacio(mensaje: String) {
         SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
             .setTitleText("Campo requerido")
+            .setContentText(mensaje)
+            .setConfirmText("Entendido")
+            .show()
+    }
+
+    private fun mostrarError(mensaje: String) {
+        SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
+            .setTitleText("Error de validación")
             .setContentText(mensaje)
             .setConfirmText("Entendido")
             .show()
@@ -84,6 +92,7 @@ class ingresar : AppCompatActivity() {
             .setConfirmText("Aceptar")
             .setConfirmClickListener { dialog ->
                 dialog.dismissWithAnimation()
+                finish()
             }
             .show()
     }

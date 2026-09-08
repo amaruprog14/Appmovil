@@ -30,6 +30,6 @@ class splash : AppCompatActivity() {
             startActivity(intent)
             // Cerramos el Activity Principal que en este caso es el MainActivity
             finish()
-        }, 5000) // Tiempo de espera en milisegundos
+        }, 7000) // Tiempo de espera en milisegundos
     }
 }

@@ -36,18 +36,16 @@ class claves : AppCompatActivity() {
         val repetirClave = etRepetir.text.toString().trim()
 
         when {
-            clave.isEmpty() -> {
-                mostrarAlerta("Campo requerido", "Debes ingresar tu nueva contraseña.", SweetAlertDialog.WARNING_TYPE)
-            }
-            repetirClave.isEmpty() -> {
-                mostrarAlerta("Campo requerido", "Debes confirmar tu contraseña nueva.", SweetAlertDialog.WARNING_TYPE)
-            }
-            else -> {
-                // Nota: Aunque solo pediste validar campos vacíos, si en el futuro
-                // necesitas que coincidan, agregarías: si (clave != repetirClave) aquí.
-                mostrarExito()
-            }
+            clave.isEmpty() -> mostrarAlerta("Campo requerido", "Ingresa tu nueva contraseña.", SweetAlertDialog.WARNING_TYPE)
+            repetirClave.isEmpty() -> mostrarAlerta("Campo requerido", "Confirma tu contraseña nueva.", SweetAlertDialog.WARNING_TYPE)
+            clave != repetirClave -> mostrarAlerta("Error", "Las contraseñas no coinciden.", SweetAlertDialog.ERROR_TYPE)
+            !esClaveRobusta(clave) -> mostrarAlerta("Contraseña débil", "Debe tener al menos 8 caracteres, 1 mayúscula, 1 minúscula, 1 número y 1 carácter especial.", SweetAlertDialog.ERROR_TYPE)
+            else -> mostrarExito()
         }
+    }
+    private fun esClaveRobusta(clave: String): Boolean {
+        val regex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@\$!%*?&#._-]).{8,}\$".toRegex()
+        return regex.matches(clave)
     }
 
     private fun mostrarAlerta(titulo: String, mensaje: String, tipo: Int) {
