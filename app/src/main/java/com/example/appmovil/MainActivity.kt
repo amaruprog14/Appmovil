@@ -1,10 +1,21 @@
 package com.example.appmovil
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import cn.pedant.SweetAlert.SweetAlertDialog
+
+private lateinit var etEmail: EditText
+private lateinit var etClave: EditText
+private lateinit var btningresar: Button
+private lateinit var cRegistro: TextView
+private lateinit var cOlvide: TextView
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -16,5 +27,59 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        etEmail = findViewById(R.id.cEmail)
+        etClave = findViewById(R.id.cClave)
+        btningresar = findViewById(R.id.cIngresar)
+        cRegistro = findViewById(R.id.cRegistrar)
+        cOlvide = findViewById(R.id.cOlvide)
+        btningresar.setOnClickListener {
+            validarCampos()
+
+        }
+        cRegistro.setOnClickListener {
+            val intent = Intent(this, registro::class.java)
+            startActivity(intent)
+        }
+        cOlvide.setOnClickListener {
+            val intent = Intent(this, recuperar::class.java)
+            startActivity(intent)
+        }
+    }
+    private fun validarCampos() {
+        val email = etEmail.text.toString().trim()
+        val clave = etClave.text.toString().trim()
+
+        when {
+            email.isEmpty() -> {
+                mostrarCampoVacio("Debes ingresar tu email.")
+            }
+            clave.isEmpty() -> {
+                mostrarCampoVacio("Debes ingresar una contraseña.")
+            }
+            else -> {
+                mostrarLoginExitoso()
+            }
+        }
+    }
+
+    private fun mostrarCampoVacio(mensaje: String) {
+        SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+            .setTitleText("Campo requerido")
+            .setContentText(mensaje)
+            .setConfirmText("Entendido")
+            .show()
+    }
+
+    private fun mostrarLoginExitoso() {
+        SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
+            .setTitleText("¡Inicio exitoso!")
+            .setContentText("Tu cuenta ha iniciado sesión correctamente.")
+            .setConfirmText("Aceptar")
+            .setConfirmClickListener { dialog ->
+                dialog.dismissWithAnimation()
+                val intent = Intent(this, principal::class.java)
+                startActivity(intent)
+            }
+            .show()
     }
 }

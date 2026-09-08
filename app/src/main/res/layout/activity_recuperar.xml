@@ -5,16 +5,19 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#F2EFEF"
     tools:context=".recuperar">
 
     <EditText
-        android:id="@+id/editTextText16"
+        android:id="@+id/rEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
         android:ems="10"
         android:hint="Ingrese su email"
         android:inputType="text"
+        android:textColor="#555555"
+        android:textColorHint="#555555"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
@@ -32,15 +35,16 @@
         app:srcCompat="@drawable/icon_mejorado" />
 
     <Button
-        android:id="@+id/button5"
+        android:id="@+id/rEnviar"
         android:layout_width="133dp"
         android:layout_height="48dp"
         android:layout_marginTop="20dp"
+        android:backgroundTint="#2196F3"
         android:text="Enviar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.51"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextText16" />
+        app:layout_constraintTop_toBottomOf="@+id/rEmail" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -50,57 +54,75 @@
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button5">
+        app:layout_constraintTop_toBottomOf="@+id/rEnviar">
 
         <EditText
-            android:id="@+id/editTextNumber"
+            android:id="@+id/codigo1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
             android:gravity="center"
             android:inputType="number"
-            android:maxLength="1" />
+            android:maxLength="1"
+            android:textColor="#555555" />
 
         <EditText
-            android:id="@+id/editTextNumber2"
+            android:id="@+id/codigo2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
             android:gravity="center"
             android:inputType="number"
-            android:maxLength="1" />
+            android:maxLength="1"
+            android:textColor="#555555" />
 
         <EditText
-            android:id="@+id/editTextNumber3"
+            android:id="@+id/codigo3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
             android:gravity="center"
             android:inputType="number"
-            android:maxLength="1" />
+            android:maxLength="1"
+            android:textColor="#555555" />
 
         <EditText
-            android:id="@+id/editTextNumber4"
+            android:id="@+id/codigo4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
             android:gravity="center"
             android:inputType="number"
-            android:maxLength="1" />
+            android:maxLength="1"
+            android:textColor="#555555" />
     </LinearLayout>
 
     <Button
-        android:id="@+id/button8"
+        android:id="@+id/rValidar"
         android:layout_width="133dp"
         android:layout_height="48dp"
+        android:backgroundTint="#2196F3"
         android:text="Validar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.51"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="88dp"
+        android:text="Código"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.277"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rEnviar" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

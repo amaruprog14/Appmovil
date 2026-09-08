@@ -5,6 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#F2EFEF"
     tools:context=".datos">
 
     <ImageView
@@ -24,6 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="44dp"
         android:text="Equipo de Desarrollo"
+        android:textColor="#000000"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -35,6 +37,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
         android:text="Amaru Marin"
+        android:textColor="#000000"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -47,6 +50,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:text="Sebastian Alzamora"
+        android:textColor="#000000"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.501"
@@ -59,6 +63,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:text="Ingenieria en Informatica"
+        android:textColor="#000000"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

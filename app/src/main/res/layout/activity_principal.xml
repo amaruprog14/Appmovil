@@ -5,76 +5,80 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#F2EFEF"
     tools:context=".principal">
 
     <ImageView
-        android:id="@+id/imageView5"
+        android:id="@+id/iconSensores"
         android:layout_width="79dp"
         android:layout_height="72dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="32dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.174"
+        app:layout_constraintHorizontal_bias="0.093"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView6"
-        app:srcCompat="@drawable/crud" />
+        app:layout_constraintTop_toBottomOf="@+id/iconCrud"
+        app:srcCompat="@drawable/sensores" />
+
+    <TextView
+        android:id="@+id/textSensores"
+        android:layout_width="129dp"
+        android:layout_height="36dp"
+        android:layout_marginTop="64dp"
+        android:text="Sensores"
+        android:textColor="#000000"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.104"
+        app:layout_constraintStart_toEndOf="@+id/iconSensores"
+        app:layout_constraintTop_toBottomOf="@+id/textCrud" />
 
     <ImageView
-        android:id="@+id/imageView7"
+        android:id="@+id/iconInfo"
+        android:layout_width="79dp"
+        android:layout_height="72dp"
+        android:layout_marginTop="28dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.093"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iconSensores"
+        app:srcCompat="@drawable/crud" />
+
+    <TextView
+        android:id="@+id/textCrud"
+        android:layout_width="206dp"
+        android:layout_height="39dp"
+        android:layout_marginTop="56dp"
+        android:text="Crud de Usuarios"
+        android:textColor="#000000"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.189"
+        app:layout_constraintStart_toEndOf="@+id/iconCrud"
+        app:layout_constraintTop_toBottomOf="@+id/imageView4" />
+
+    <ImageView
+        android:id="@+id/iconCrud"
         android:layout_width="79dp"
         android:layout_height="72dp"
         android:layout_marginTop="196dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.174"
+        app:layout_constraintHorizontal_bias="0.093"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/crud" />
 
     <TextView
-        android:id="@+id/textView6"
+        android:id="@+id/textInfo"
         android:layout_width="191dp"
         android:layout_height="41dp"
         android:layout_marginTop="64dp"
         android:text="Desarrolladores"
+        android:textColor="#000000"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.704"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="256dp"
-        android:layout_height="41dp"
-        android:layout_marginTop="52dp"
-        android:text="Crud de Usuarios"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView4" />
-
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="129dp"
-        android:layout_height="36dp"
-        android:layout_marginTop="67dp"
-        android:text="Sensores"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.549"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
-
-    <ImageView
-        android:id="@+id/imageView6"
-        android:layout_width="79dp"
-        android:layout_height="72dp"
-        android:layout_marginTop="30dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.174"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView7"
-        app:srcCompat="@drawable/sensores" />
+        app:layout_constraintHorizontal_bias="0.163"
+        app:layout_constraintStart_toEndOf="@+id/iconInfo"
+        app:layout_constraintTop_toBottomOf="@+id/textSensores" />
 
     <ImageView
         android:id="@+id/imageView4"

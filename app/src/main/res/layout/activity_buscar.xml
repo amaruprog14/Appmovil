@@ -5,6 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#F2EFEF"
     tools:context=".buscar">
 
     <EditText
@@ -14,10 +15,12 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="16dp"
+        android:background="@android:drawable/edit_text"
         android:hint="Buscar usuario..."
         android:inputType="text"
         android:padding="12dp"
-        android:background="@android:drawable/edit_text"
+        android:textColor="#555555"
+        android:textColorHint="#555555"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

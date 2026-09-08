@@ -5,44 +5,50 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#F2EFEF"
     tools:context=".claves">
 
     <EditText
-        android:id="@+id/editTextText17"
+        android:id="@+id/cContra"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
         android:ems="10"
         android:hint="Ingrese la contraseña"
         android:inputType="text"
+        android:textColor="#555555"
+        android:textColorHint="#555555"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView9" />
 
     <EditText
-        android:id="@+id/editTextText13"
+        android:id="@+id/cRepetir"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:ems="10"
         android:hint="Repita la contraseña"
         android:inputType="text"
+        android:textColor="#555555"
+        android:textColorHint="#555555"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextText17" />
+        app:layout_constraintTop_toBottomOf="@+id/cContra" />
 
     <Button
-        android:id="@+id/button4"
+        android:id="@+id/btnGuardar"
         android:layout_width="203dp"
         android:layout_height="65dp"
         android:layout_marginTop="40dp"
+        android:backgroundTint="#2196F3"
         android:text="Guardar"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextText13" />
+        app:layout_constraintTop_toBottomOf="@+id/cRepetir" />
 
     <ImageView
         android:id="@+id/imageView9"

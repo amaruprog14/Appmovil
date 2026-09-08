@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F5F5"
+    android:background="#F2EFEF"
     tools:context=".registro">
 
     <ImageView
@@ -60,7 +60,8 @@
             android:id="@+id/editTextText3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="text" />
+            android:inputType="text"
+            android:textColorHint="#555555" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -80,7 +81,8 @@
             android:id="@+id/editTextText4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="text" />
+            android:inputType="text"
+            android:textColorHint="#555555" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -100,7 +102,8 @@
             android:id="@+id/editTextText5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="text" />
+            android:inputType="text"
+            android:textColorHint="#555555" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -120,7 +123,8 @@
             android:id="@+id/editTextText6"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textEmailAddress" />
+            android:inputType="textEmailAddress"
+            android:textColorHint="#555555" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -141,7 +145,8 @@
             android:id="@+id/editTextText7"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textPassword" />
+            android:inputType="textPassword"
+            android:textColorHint="#555555" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
@@ -152,7 +157,7 @@
         android:layout_marginTop="28dp"
         android:layout_marginEnd="32dp"
         android:layout_marginBottom="24dp"
-        android:backgroundTint="#3F51B5"
+        android:backgroundTint="#2196F3"
         android:text="Guardar"
         android:textSize="16sp"
         app:cornerRadius="12dp"
