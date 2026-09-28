@@ -38,7 +38,7 @@
         app:layout_constraintHorizontal_bias="0.055"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView13"
-        app:srcCompat="@drawable/captura_de_pantalla_2026_09_05_162818_removebg_preview" />
+        app:srcCompat="@drawable/hot" />
 
     <TextView
         android:id="@+id/textView15"
