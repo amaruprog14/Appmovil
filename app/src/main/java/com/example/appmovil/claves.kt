@@ -60,7 +60,7 @@ class claves : AppCompatActivity() {
         SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
             .setTitleText("¡Contraseña actualizada!")
             .setContentText("La contraseña se ha actualizado correctamente.")
-            .setConfirmText("Acepta")
+            .setConfirmText("Aceptar")
             .setConfirmClickListener { dialog ->
                 dialog.dismissWithAnimation()
                 val intent = Intent(this, MainActivity::class.java)
