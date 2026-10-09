@@ -60,7 +60,14 @@ class ingresar : AppCompatActivity() {
             !esClaveRobusta(clave) -> {
                 mostrarError("La contraseña debe contener mínimo 8 caracteres, 1 mayúscula, 1 minúscula, 1 número y 1 carácter especial.")
             }
-            else -> mostrarIngresoExitoso()
+            else -> {
+                if (ConexionDbHelper(this).insertar(rut, nombres, apellidos, email, clave)) {
+                    SyncWorker.programar(this)
+                    mostrarIngresoExitoso()
+                } else {
+                    mostrarError("Ya existe un usuario con ese Rut.")
+                }
+            }
         }
     }
 

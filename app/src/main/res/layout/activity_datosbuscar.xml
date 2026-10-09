@@ -33,7 +33,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imgDatos" />
 
-    <TextView
+    <EditText
         android:id="@+id/tvNombresDetalle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -41,6 +41,8 @@
         android:layout_marginTop="12dp"
         android:layout_marginEnd="32dp"
         android:background="@android:drawable/edit_text"
+        android:hint="Nombres"
+        android:inputType="text"
         android:padding="12dp"
         android:textColor="#555555"
         android:textColorHint="#555555"
@@ -48,7 +50,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvRutDetalle" />
 
-    <TextView
+    <EditText
         android:id="@+id/tvApellidosDetalle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -56,6 +58,8 @@
         android:layout_marginTop="12dp"
         android:layout_marginEnd="32dp"
         android:background="@android:drawable/edit_text"
+        android:hint="Apellidos"
+        android:inputType="text"
         android:padding="12dp"
         android:textColor="#555555"
         android:textColorHint="#555555"
@@ -63,7 +67,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvNombresDetalle" />
 
-    <TextView
+    <EditText
         android:id="@+id/tvEmailDetalle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -71,6 +75,8 @@
         android:layout_marginTop="12dp"
         android:layout_marginEnd="32dp"
         android:background="@android:drawable/edit_text"
+        android:hint="Email"
+        android:inputType="textEmailAddress"
         android:padding="12dp"
         android:textColor="#555555"
         android:textColorHint="#555555"

@@ -1,7 +1,9 @@
 package com.example.appmovil
 
 import android.os.Bundle
+import android.util.Patterns
 import android.widget.Button
+import android.widget.EditText
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -21,45 +23,69 @@ class datosbuscar : AppCompatActivity() {
             insets
         }
 
-        val tvRutDetalle = findViewById<TextView>(R.id.tvRutDetalle)
-        val tvNombresDetalle = findViewById<TextView>(R.id.tvNombresDetalle)
-        val tvApellidosDetalle = findViewById<TextView>(R.id.tvApellidosDetalle)
-        val tvEmailDetalle = findViewById<TextView>(R.id.tvEmailDetalle)
+        val tvRut = findViewById<TextView>(R.id.tvRutDetalle)
+        val etNombres = findViewById<EditText>(R.id.tvNombresDetalle)
+        val etApellidos = findViewById<EditText>(R.id.tvApellidosDetalle)
+        val etEmail = findViewById<EditText>(R.id.tvEmailDetalle)
         val btnModificar = findViewById<Button>(R.id.btnModificar)
         val btnEliminar = findViewById<Button>(R.id.btnEliminar)
 
         val rut = intent.getStringExtra("rut") ?: ""
-        val nombres = intent.getStringExtra("nombres") ?: ""
-        val apellidos = intent.getStringExtra("apellidos") ?: ""
-        val email = intent.getStringExtra("email") ?: ""
+        tvRut.text = "Rut: $rut"
+        etNombres.setText(intent.getStringExtra("nombres") ?: "")
+        etApellidos.setText(intent.getStringExtra("apellidos") ?: "")
+        etEmail.setText(intent.getStringExtra("email") ?: "")
 
-        tvRutDetalle.text = "Rut: $rut"
-        tvNombresDetalle.text = "Nombres: $nombres"
-        tvApellidosDetalle.text = "Apellidos: $apellidos"
-        tvEmailDetalle.text = "Email: $email"
+        val db = ConexionDbHelper(this)
 
         btnModificar.setOnClickListener {
-            SweetAlertDialog(this, SweetAlertDialog.NORMAL_TYPE)
-                .setTitleText("Modificar")
-                .setContentText("Aquí iría la edición de $nombres $apellidos.")
-                .setConfirmText("Aceptar")
-                .show()
+            val n = etNombres.text.toString().trim()
+            val a = etApellidos.text.toString().trim()
+            val e = etEmail.text.toString().trim()
+
+            when {
+                n.isEmpty() || a.isEmpty() || e.isEmpty() ->
+                    alerta("Campos incompletos", "Completa todos los campos.", SweetAlertDialog.WARNING_TYPE)
+                !Patterns.EMAIL_ADDRESS.matcher(e).matches() ->
+                    alerta("Email inválido", "Ingresa un correo válido.", SweetAlertDialog.ERROR_TYPE)
+                else -> {
+                    db.actualizar(rut, n, a, e)
+                    SyncWorker.programar(this)
+                    SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
+                        .setTitleText("¡Modificado!")
+                        .setContentText("Los datos se guardaron correctamente.")
+                        .setConfirmText("Aceptar")
+                        .setConfirmClickListener { d ->
+                            d.dismissWithAnimation()
+                            finish()
+                        }
+                        .show()
+                }
+            }
         }
 
         btnEliminar.setOnClickListener {
             SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
                 .setTitleText("¿Eliminar usuario?")
-                .setContentText("Se eliminará a $nombres $apellidos.")
+                .setContentText("Se eliminará a ${etNombres.text} ${etApellidos.text}.")
                 .setConfirmText("Sí, eliminar")
                 .setCancelText("Cancelar")
-                .setConfirmClickListener { dialog ->
-                    dialog.dismissWithAnimation()
+                .setConfirmClickListener { d ->
+                    db.marcarEliminado(rut)
+                    SyncWorker.programar(this)
+                    d.dismissWithAnimation()
                     finish()
                 }
-                .setCancelClickListener { dialog ->
-                    dialog.dismissWithAnimation()
-                }
+                .setCancelClickListener { d -> d.dismissWithAnimation() }
                 .show()
         }
+    }
+
+    private fun alerta(titulo: String, mensaje: String, tipo: Int) {
+        SweetAlertDialog(this, tipo)
+            .setTitleText(titulo)
+            .setContentText(mensaje)
+            .setConfirmText("Entendido")
+            .show()
     }
 }

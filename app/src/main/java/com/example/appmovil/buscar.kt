@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.EditText
-import android.widget.ImageView
 import android.widget.ListView
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
@@ -30,15 +29,8 @@ class buscar : AppCompatActivity() {
     private lateinit var listViewUsuarios: ListView
     private lateinit var adapter: UsuarioAdapter
 
-    private val listaCompleta = listOf(
-        Usuario("11.111.111-1", "Juan", "Pérez López", "juan.perez@correo.com"),
-        Usuario("22.222.222-2", "María", "González Soto", "maria.gonzalez@correo.com"),
-        Usuario("33.333.333-3", "Pedro", "Ramírez Díaz", "pedro.ramirez@correo.com"),
-        Usuario("44.444.444-4", "Ana", "Torres Fuentes", "ana.torres@correo.com"),
-        Usuario("55.555.555-5", "Diego", "Muñoz Rojas", "diego.munoz@correo.com")
-    )
-
-    private var listaFiltrada = listaCompleta.toMutableList()
+    private var listaCompleta: List<Usuario> = emptyList()
+    private var listaFiltrada = mutableListOf<Usuario>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,6 +60,13 @@ class buscar : AppCompatActivity() {
                 filtrarUsuarios(s.toString())
             }
         })
+    }
+
+    // <-- AQUÍ: se ejecuta al abrir y al volver desde el detalle
+    override fun onStart() {
+        super.onStart()
+        listaCompleta = ConexionDbHelper(this).listar()
+        filtrarUsuarios(etBuscar.text.toString())
     }
 
     private fun filtrarUsuarios(query: String) {

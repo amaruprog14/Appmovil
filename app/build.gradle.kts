@@ -44,4 +44,5 @@ dependencies {
     implementation("com.airbnb.android:lottie:6.7.1")
     implementation("com.github.f0ris.sweetalert:library:1.6.2")
     implementation("com.android.volley:volley:1.2.1")
+    implementation("androidx.work:work-runtime-ktx:2.9.1")
 }

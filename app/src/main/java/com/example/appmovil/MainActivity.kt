@@ -11,12 +11,20 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import cn.pedant.SweetAlert.SweetAlertDialog
 import android.util.Patterns
+import com.android.volley.Request
+import com.android.volley.RequestQueue
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
+import org.json.JSONException
+import android.net.Uri
 
 private lateinit var etEmail: EditText
 private lateinit var etClave: EditText
 private lateinit var btningresar: Button
 private lateinit var cRegistro: TextView
 private lateinit var cOlvide: TextView
+
+private lateinit var datosui: RequestQueue
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,9 +41,13 @@ class MainActivity : AppCompatActivity() {
         btningresar = findViewById(R.id.cIngresar)
         cRegistro = findViewById(R.id.cRegistrar)
         cOlvide = findViewById(R.id.cOlvide)
-        btningresar.setOnClickListener {
-            validarCampos()
+        datosui= Volley.newRequestQueue(this);
 
+        btningresar.setOnClickListener {
+            if (validarCampos()) {
+                btningresar.isEnabled = false // Bloquea el botón según la rúbrica
+                consultarDatos(etEmail.text.toString().trim(), etClave.text.toString().trim())
+            }
         }
         cRegistro.setOnClickListener {
             val intent = Intent(this, registro::class.java)
@@ -45,28 +57,77 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, recuperar::class.java)
             startActivity(intent)
         }
+        SyncWorker.programar(this)
     }
-    private fun validarCampos() {
+    private fun validarCampos(): Boolean {
         val email = etEmail.text.toString().trim()
         val clave = etClave.text.toString().trim()
 
-        when {
-            email.isEmpty() -> mostrarCampoVacio("Debes ingresar tu email.")
+        return when {
+            email.isEmpty() -> {
+                mostrarCampoVacio("Debes ingresar tu email.")
+                false
+            }
             !Patterns.EMAIL_ADDRESS.matcher(email).matches() -> {
                 SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
                     .setTitleText("Formato incorrecto")
                     .setContentText("Debes ingresar un email válido (ej: usuario@dominio.com).")
                     .setConfirmText("Entendido")
                     .show()
+                false
             }
-            clave.isEmpty() -> mostrarCampoVacio("Debes ingresar una contraseña.")
-            else -> {
-                btningresar.isEnabled = false // Bloquea el botón según la rúbrica
-                mostrarLoginExitoso()
+            clave.isEmpty() -> {
+                mostrarCampoVacio("Debes ingresar una contraseña.")
+                false
             }
+            else -> true
         }
     }
+    fun consultarDatos(usu: String, pass: String) {
+        val url = "http://13.223.171.108/apiconsultausu.php?usu=${Uri.encode(usu)}&pass=${Uri.encode(pass)}"
 
+        val request = JsonObjectRequest(
+            Request.Method.GET, url, null,
+            { response ->
+                btningresar.isEnabled = true
+                try {
+                    val estado = response.getString("estado")
+                    if (estado == "0") {
+                        SweetAlertDialog(this@MainActivity, SweetAlertDialog.ERROR_TYPE)
+                            .setTitleText("Error")
+                            .setContentText("Usuario no existe")
+                            .setConfirmText("Cerrar")
+                            .setConfirmClickListener { dialog ->
+                                dialog.dismissWithAnimation()
+                            }
+                            .show()
+                    } else {
+                        mostrarLoginExitoso()
+                    }
+                } catch (e: JSONException) {
+                    e.printStackTrace()
+                }
+            },
+            { error ->
+                btningresar.isEnabled = true
+                error.printStackTrace()
+                // Sin conexión con el servidor: se intenta con la base local
+                if (ConexionDbHelper(this).validarLogin(usu, pass)) {
+                    mostrarLoginExitoso()
+                } else {
+                    SweetAlertDialog(this@MainActivity, SweetAlertDialog.ERROR_TYPE)
+                        .setTitleText("Sin conexión")
+                        .setContentText("No se pudo conectar con el servidor y el usuario no existe en este dispositivo.")
+                        .setConfirmText("Cerrar")
+                        .setConfirmClickListener { dialog ->
+                            dialog.dismissWithAnimation()
+                        }
+                        .show()
+                }
+            }
+        )
+        datosui.add(request)
+    }
     private fun mostrarCampoVacio(mensaje: String) {
         SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
             .setTitleText("Campo requerido")

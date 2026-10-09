@@ -61,7 +61,7 @@ class registro : AppCompatActivity() {
             !esClaveRobusta(clave) -> {
                 mostrarError("La contraseña debe tener mínimo 8 caracteres, 1 mayúscula, 1 minúscula, 1 número y 1 carácter especial.")
             }
-            else -> mostrarRegistroExitoso()
+            else -> guardarLocal(rut, nombres, apellidos, email, clave)
         }
     }
     private fun mostrarError(mensaje: String) {
@@ -70,6 +70,15 @@ class registro : AppCompatActivity() {
             .setContentText(mensaje)
             .setConfirmText("Entendido")
             .show()
+    }
+    private fun guardarLocal(rut: String, nombres: String, apellidos: String, email: String, clave: String) {
+        val ok = ConexionDbHelper(this).insertar(rut, nombres, apellidos, email, clave)
+        if (!ok) {
+            mostrarError("Ya existe un usuario con ese Rut.")
+            return
+        }
+        SyncWorker.programar(this)
+        mostrarRegistroExitoso()
     }
     private fun esClaveRobusta(clave: String): Boolean {
         val regex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@\$!%*?&#._-]).{8,}\$".toRegex()
