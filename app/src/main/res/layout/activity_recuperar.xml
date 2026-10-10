@@ -8,6 +8,16 @@
     android:background="#F2EFEF"
     tools:context=".recuperar">
 
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="140dp"
+        android:layout_height="142dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/icon_mejorado" />
+
     <EditText
         android:id="@+id/rEmail"
         android:layout_width="wrap_content"
@@ -15,53 +25,53 @@
         android:layout_marginTop="40dp"
         android:ems="10"
         android:hint="Ingrese su email"
-        android:inputType="text"
+        android:inputType="textEmailAddress"
         android:textColor="#555555"
         android:textColorHint="#555555"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView3" />
 
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="140dp"
-        android:layout_height="142dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/icon_mejorado" />
-
     <Button
         android:id="@+id/rEnviar"
-        android:layout_width="133dp"
+        android:layout_width="wrap_content"
         android:layout_height="48dp"
         android:layout_marginTop="20dp"
         android:backgroundTint="#2196F3"
-        android:text="Enviar"
+        android:text="Enviar código"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.51"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/rEmail" />
 
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="Ingrese código"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rEnviar" />
+
     <LinearLayout
         android:id="@+id/linearLayout"
-        android:layout_width="211dp"
-        android:layout_height="87dp"
-        android:layout_marginTop="120dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="24dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rEnviar">
+        app:layout_constraintTop_toBottomOf="@+id/textView3">
 
         <EditText
             android:id="@+id/codigo1"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:ems="10"
             android:gravity="center"
             android:inputType="number"
             android:maxLength="1"
@@ -69,10 +79,9 @@
 
         <EditText
             android:id="@+id/codigo2"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:ems="10"
             android:gravity="center"
             android:inputType="number"
             android:maxLength="1"
@@ -80,10 +89,9 @@
 
         <EditText
             android:id="@+id/codigo3"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:ems="10"
             android:gravity="center"
             android:inputType="number"
             android:maxLength="1"
@@ -91,38 +99,56 @@
 
         <EditText
             android:id="@+id/codigo4"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:ems="10"
+            android:gravity="center"
+            android:inputType="number"
+            android:maxLength="1"
+            android:textColor="#555555" />
+
+        <EditText
+            android:id="@+id/codigo5"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:inputType="number"
+            android:maxLength="1"
+            android:textColor="#555555" />
+
+        <EditText
+            android:id="@+id/codigo6"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:gravity="center"
             android:inputType="number"
             android:maxLength="1"
             android:textColor="#555555" />
     </LinearLayout>
 
-    <Button
-        android:id="@+id/rValidar"
-        android:layout_width="133dp"
-        android:layout_height="48dp"
-        android:backgroundTint="#2196F3"
-        android:text="Validar"
+    <TextView
+        android:id="@+id/tvTimer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text=""
+        android:textColor="#555555"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.51"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
-    <TextView
-        android:id="@+id/textView3"
+    <Button
+        android:id="@+id/rValidar"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="88dp"
-        android:text="Código"
-        android:textColor="#000000"
-        android:textSize="16sp"
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="#2196F3"
+        android:text="Validar"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.277"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rEnviar" />
+        app:layout_constraintTop_toBottomOf="@+id/tvTimer" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -92,20 +92,28 @@ class MainActivity : AppCompatActivity() {
                 btningresar.isEnabled = true
                 try {
                     val estado = response.getString("estado")
-                    if (estado == "0") {
-                        SweetAlertDialog(this@MainActivity, SweetAlertDialog.ERROR_TYPE)
+                    when (estado) {
+                        "1" -> mostrarLoginExitoso()
+                        "2" -> SweetAlertDialog(this@MainActivity, SweetAlertDialog.WARNING_TYPE)
+                            .setTitleText("Cuenta bloqueada")
+                            .setContentText("Tu cuenta está en proceso de recuperación de contraseña.")
+                            .setConfirmText("Cerrar")
+                            .show()
+                        else -> SweetAlertDialog(this@MainActivity, SweetAlertDialog.ERROR_TYPE)
                             .setTitleText("Error")
-                            .setContentText("Usuario no existe")
+                            .setContentText("Usuario o contraseña incorrectos")
                             .setConfirmText("Cerrar")
                             .setConfirmClickListener { dialog ->
                                 dialog.dismissWithAnimation()
                             }
                             .show()
-                    } else {
-                        mostrarLoginExitoso()
                     }
                 } catch (e: JSONException) {
-                    e.printStackTrace()
+                    SweetAlertDialog(this@MainActivity, SweetAlertDialog.ERROR_TYPE)
+                        .setTitleText("Error")
+                        .setContentText("Respuesta inesperada del servidor.")
+                        .setConfirmText("Cerrar")
+                        .show()
                 }
             },
             { error ->
