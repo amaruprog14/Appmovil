@@ -10,7 +10,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import cn.pedant.SweetAlert.SweetAlertDialog
 
-class registro : AppCompatActivity() {
+class registro : BaseConexion() {
 
     private lateinit var etRut: EditText
     private lateinit var etNombres: EditText

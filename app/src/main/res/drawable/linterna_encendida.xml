@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+    <group
+        android:pivotX="60"
+        android:pivotY="62"
+        android:rotation="30">
+        <!-- rayos de luz -->
+        <path
+            android:pathData="M60,4 L60,20"
+            android:strokeColor="#FFC107"
+            android:strokeWidth="5"
+            android:strokeLineCap="round" />
+        <path
+            android:pathData="M34,10 L43,22"
+            android:strokeColor="#FFC107"
+            android:strokeWidth="5"
+            android:strokeLineCap="round" />
+        <path
+            android:pathData="M86,10 L77,22"
+            android:strokeColor="#FFC107"
+            android:strokeWidth="5"
+            android:strokeLineCap="round" />
+        <!-- tapa -->
+        <path
+            android:fillColor="#FFF59D"
+            android:pathData="M34,28 L86,28 L86,37 L34,37 Z"
+            android:strokeColor="#5D4037"
+            android:strokeWidth="2"
+            android:strokeLineJoin="round" />
+        <!-- cabeza -->
+        <path
+            android:fillColor="#FFD54F"
+            android:pathData="M38,37 L82,37 L74,60 L46,60 Z"
+            android:strokeColor="#5D4037"
+            android:strokeWidth="2"
+            android:strokeLineJoin="round" />
+        <!-- cuerpo -->
+        <path
+            android:fillColor="#F9A825"
+            android:pathData="M46,60 L74,60 L74,108 Q74,114 68,114 L52,114 Q46,114 46,108 Z"
+            android:strokeColor="#5D4037"
+            android:strokeWidth="2"
+            android:strokeLineJoin="round" />
+        <!-- botón -->
+        <path
+            android:fillColor="#5D4037"
+            android:pathData="M56,74 L64,74 L64,90 L56,90 Z" />
+    </group>
+</vector>

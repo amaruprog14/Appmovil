@@ -8,8 +8,9 @@ class SyncWorker(ctx: Context, params: WorkerParameters) : Worker(ctx, params) {
     override fun doWork(): Result {
         val db = ConexionDbHelper(applicationContext)
         var huboFallo = false
+        val lista = db.pendientes()
 
-        for (p in db.pendientes()) {
+        for (p in lista) {
             if (p.estado == 1) {
                 val ok = Api.postSync(applicationContext, "registrar.php", mapOf(
                     "rut" to p.rut, "nombres" to p.nombres, "apellidos" to p.apellidos,
@@ -21,6 +22,7 @@ class SyncWorker(ctx: Context, params: WorkerParameters) : Worker(ctx, params) {
                 if (ok) db.borrarDefinitivo(p.rut) else huboFallo = true
             }
         }
+        if (!huboFallo && lista.isNotEmpty()) ConexionMonitor.sincronizacionCompletada()
         return if (huboFallo) Result.retry() else Result.success()
     }
 

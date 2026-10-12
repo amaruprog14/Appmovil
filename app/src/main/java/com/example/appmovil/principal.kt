@@ -16,7 +16,7 @@ private lateinit var textoSensores: TextView
 
 private lateinit var iconoDesarrolladores: ImageView
 private lateinit var textoDesarrolladores: TextView
-class principal : AppCompatActivity() {
+class principal : BaseConexion() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()

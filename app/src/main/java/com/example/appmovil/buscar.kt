@@ -23,7 +23,7 @@ data class Usuario(
     val email: String
 )
 
-class buscar : AppCompatActivity() {
+class buscar : BaseConexion() {
 
     private lateinit var etBuscar: EditText
     private lateinit var listViewUsuarios: ListView

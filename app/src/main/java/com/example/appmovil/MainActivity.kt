@@ -26,7 +26,7 @@ private lateinit var cOlvide: TextView
 
 private lateinit var datosui: RequestQueue
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseConexion() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
