@@ -1,15 +1,14 @@
 package com.example.appmovil
 
 import android.os.Bundle
-import android.util.Patterns
 import android.widget.Button
 import android.widget.EditText
 import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import cn.pedant.SweetAlert.SweetAlertDialog
 
+/** Ingresar usuario desde Gestión de usuarios (imagen N° 8). Al terminar vuelve al menú (imagen N° 7). */
 class ingresar : BaseConexion() {
 
     private lateinit var etRut: EditText
@@ -17,6 +16,7 @@ class ingresar : BaseConexion() {
     private lateinit var etApellidos: EditText
     private lateinit var etEmail: EditText
     private lateinit var etClave: EditText
+    private lateinit var etRepetir: EditText
     private lateinit var btnGuardar: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,72 +34,58 @@ class ingresar : BaseConexion() {
         etApellidos = findViewById(R.id.editTextText9)
         etEmail = findViewById(R.id.editTextText10)
         etClave = findViewById(R.id.editTextText12)
+        etRepetir = findViewById(R.id.etRepetirClave)
         btnGuardar = findViewById(R.id.button3)
 
-        btnGuardar.setOnClickListener {
-            validarCampos()
-        }
+        btnGuardar.setOnClickListener { validarCampos() }
     }
 
     private fun validarCampos() {
-        val rut = etRut.text.toString().trim()
-        val nombres = etNombres.text.toString().trim()
-        val apellidos = etApellidos.text.toString().trim()
-        val email = etEmail.text.toString().trim()
+        val rut = etRut.text.toString().trim().uppercase()
+        val nombres = Validar.limpiar(etNombres.text.toString())
+        val apellidos = Validar.limpiar(etApellidos.text.toString())
+        val email = etEmail.text.toString().trim().lowercase()
         val clave = etClave.text.toString().trim()
+        val repetir = etRepetir.text.toString().trim()
 
-        when {
-            rut.isEmpty() -> mostrarCampoVacio("Debes ingresar tu Rut.")
-            nombres.isEmpty() -> mostrarCampoVacio("Debes ingresar tus nombres.")
-            apellidos.isEmpty() -> mostrarCampoVacio("Debes ingresar tus apellidos.")
-            email.isEmpty() -> mostrarCampoVacio("Debes ingresar tu email.")
-            !Patterns.EMAIL_ADDRESS.matcher(email).matches() -> {
-                mostrarError("El formato del correo electrónico no es válido.")
-            }
-            clave.isEmpty() -> mostrarCampoVacio("Debes ingresar una contraseña.")
-            !esClaveRobusta(clave) -> {
-                mostrarError("La contraseña debe contener mínimo 8 caracteres, 1 mayúscula, 1 minúscula, 1 número y 1 carácter especial.")
-            }
-            else -> {
-                if (ConexionDbHelper(this).insertar(rut, nombres, apellidos, email, clave)) {
-                    SyncWorker.programar(this)
-                    mostrarIngresoExitoso()
-                } else {
-                    mostrarError("Ya existe un usuario con ese Rut.")
-                }
+        val problema = Validar.registro(rut, nombres, apellidos, email, clave, repetir)
+        if (problema != null) {
+            if (problema.vacio) alerta("Campo requerido", problema.msg, SweetAlertDialog.WARNING_TYPE)
+            else alerta("Error de validación", problema.msg, SweetAlertDialog.ERROR_TYPE)
+            return
+        }
+
+        btnGuardar.isEnabled = false
+        RepositorioUsuarios.registrar(this, rut, nombres, apellidos, email, clave) { r ->
+            if (isFinishing || isDestroyed) return@registrar   // el usuario salió de la pantalla
+            btnGuardar.isEnabled = true
+            when (r) {
+                RepositorioUsuarios.Respuesta.EnServidor ->
+                    mostrarIngresoExitoso("El usuario se registró correctamente en MySQL.")
+                is RepositorioUsuarios.Respuesta.EnLocal ->
+                    mostrarIngresoExitoso("El usuario se registró. ${r.motivo}")
+                is RepositorioUsuarios.Respuesta.Rechazado ->
+                    alerta("No se pudo registrar", r.msg, SweetAlertDialog.ERROR_TYPE)
             }
         }
     }
 
-    private fun esClaveRobusta(clave: String): Boolean {
-        val regex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@\$!%*?&#._-]).{8,}\$".toRegex()
-        return regex.matches(clave)
-    }
-
-    private fun mostrarCampoVacio(mensaje: String) {
-        SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
-            .setTitleText("Campo requerido")
+    private fun alerta(titulo: String, mensaje: String, tipo: Int) {
+        SweetAlertDialog(this, tipo)
+            .setTitleText(titulo)
             .setContentText(mensaje)
             .setConfirmText("Entendido")
             .show()
     }
 
-    private fun mostrarError(mensaje: String) {
-        SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
-            .setTitleText("Error de validación")
-            .setContentText(mensaje)
-            .setConfirmText("Entendido")
-            .show()
-    }
-
-    private fun mostrarIngresoExitoso() {
+    private fun mostrarIngresoExitoso(mensaje: String) {
         SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
             .setTitleText("¡Listo!")
-            .setContentText("Los datos se guardaron correctamente.")
+            .setContentText(mensaje)
             .setConfirmText("Aceptar")
             .setConfirmClickListener { dialog ->
                 dialog.dismissWithAnimation()
-                finish()
+                finish()   // vuelve a Gestión de usuarios
             }
             .show()
     }

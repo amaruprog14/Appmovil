@@ -106,6 +106,8 @@ class recuperar : AppCompatActivity() {
                     onRespuesta = { json ->
                         if (json.optBoolean("ok")) {
                             emailEnviado = email
+                            // La cuenta queda bloqueada: tampoco se puede entrar sin conexión
+                            ConexionDbHelper(this).borrarCredencial(email)
                             limpiarCajas()
                             iniciarCuenta()
                             alerta("¡Código enviado!", "Revisa tu correo. El código vale 1 minuto.",

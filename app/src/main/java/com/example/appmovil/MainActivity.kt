@@ -11,20 +11,12 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import cn.pedant.SweetAlert.SweetAlertDialog
 import android.util.Patterns
-import com.android.volley.Request
-import com.android.volley.RequestQueue
-import com.android.volley.toolbox.JsonObjectRequest
-import com.android.volley.toolbox.Volley
-import org.json.JSONException
-import android.net.Uri
 
 private lateinit var etEmail: EditText
 private lateinit var etClave: EditText
 private lateinit var btningresar: Button
 private lateinit var cRegistro: TextView
 private lateinit var cOlvide: TextView
-
-private lateinit var datosui: RequestQueue
 
 class MainActivity : BaseConexion() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,7 +33,6 @@ class MainActivity : BaseConexion() {
         btningresar = findViewById(R.id.cIngresar)
         cRegistro = findViewById(R.id.cRegistrar)
         cOlvide = findViewById(R.id.cOlvide)
-        datosui= Volley.newRequestQueue(this);
 
         btningresar.setOnClickListener {
             if (validarCampos()) {
@@ -83,58 +74,66 @@ class MainActivity : BaseConexion() {
             else -> true
         }
     }
+    /**
+     * Login contra MySQL (login.php compara con password_verify).
+     * Se envía por POST para que la clave no quede en la URL ni en los logs del servidor.
+     * Si no hay conexión, se valida contra el hash guardado en el teléfono.
+     */
     fun consultarDatos(usu: String, pass: String) {
-        val url = "http://13.223.171.108/apiconsultausu.php?usu=${Uri.encode(usu)}&pass=${Uri.encode(pass)}"
+        val db = ConexionDbHelper(this)
 
-        val request = JsonObjectRequest(
-            Request.Method.GET, url, null,
-            { response ->
-                btningresar.isEnabled = true
-                try {
-                    val estado = response.getString("estado")
-                    when (estado) {
-                        "1" -> mostrarLoginExitoso()
-                        "2" -> SweetAlertDialog(this@MainActivity, SweetAlertDialog.WARNING_TYPE)
+        if (!ConexionMonitor.enLinea) {
+            btningresar.isEnabled = true
+            loginSinConexion(usu, pass)
+            return
+        }
+
+        Api.post(this, "login.php", mapOf("email" to usu, "clave" to pass)) { r ->
+            btningresar.isEnabled = true
+            when (r) {
+                is Resultado.Ok -> when (r.json.optString("estado")) {
+                    "1" -> {
+                        db.guardarCredencial(usu, pass)   // permite entrar después sin conexión
+                        Sesion.guardar(this, usu)
+                        mostrarLoginExitoso()
+                    }
+                    "2" -> {
+                        db.borrarCredencial(usu)          // bloqueada: tampoco entra sin conexión
+                        SweetAlertDialog(this@MainActivity, SweetAlertDialog.WARNING_TYPE)
                             .setTitleText("Cuenta bloqueada")
                             .setContentText("Tu cuenta está en proceso de recuperación de contraseña.")
                             .setConfirmText("Cerrar")
                             .show()
-                        else -> SweetAlertDialog(this@MainActivity, SweetAlertDialog.ERROR_TYPE)
-                            .setTitleText("Error")
-                            .setContentText("Usuario o contraseña incorrectos")
-                            .setConfirmText("Cerrar")
-                            .setConfirmClickListener { dialog ->
-                                dialog.dismissWithAnimation()
-                            }
-                            .show()
                     }
-                } catch (e: JSONException) {
-                    SweetAlertDialog(this@MainActivity, SweetAlertDialog.ERROR_TYPE)
-                        .setTitleText("Error")
-                        .setContentText("Respuesta inesperada del servidor.")
-                        .setConfirmText("Cerrar")
-                        .show()
+                    else -> credencialesIncorrectas()
                 }
-            },
-            { error ->
-                btningresar.isEnabled = true
-                error.printStackTrace()
-                // Sin conexión con el servidor: se intenta con la base local
-                if (ConexionDbHelper(this).validarLogin(usu, pass)) {
-                    mostrarLoginExitoso()
-                } else {
-                    SweetAlertDialog(this@MainActivity, SweetAlertDialog.ERROR_TYPE)
-                        .setTitleText("Sin conexión")
-                        .setContentText("No se pudo conectar con el servidor y el usuario no existe en este dispositivo.")
-                        .setConfirmText("Cerrar")
-                        .setConfirmClickListener { dialog ->
-                            dialog.dismissWithAnimation()
-                        }
-                        .show()
-                }
+                is Resultado.Rechazado -> credencialesIncorrectas()
+                Resultado.FalloRed -> loginSinConexion(usu, pass)
             }
-        )
-        datosui.add(request)
+        }
+    }
+
+    private fun loginSinConexion(usu: String, pass: String) {
+        if (ConexionDbHelper(this).validarLogin(usu, pass)) {
+            Sesion.guardar(this, usu)
+            mostrarLoginExitoso()
+        } else {
+            SweetAlertDialog(this@MainActivity, SweetAlertDialog.ERROR_TYPE)
+                .setTitleText("Sin conexión")
+                .setContentText("No se pudo conectar con el servidor y no hay credenciales válidas guardadas en este dispositivo.")
+                .setConfirmText("Cerrar")
+                .setConfirmClickListener { dialog -> dialog.dismissWithAnimation() }
+                .show()
+        }
+    }
+
+    private fun credencialesIncorrectas() {
+        SweetAlertDialog(this@MainActivity, SweetAlertDialog.ERROR_TYPE)
+            .setTitleText("Error")
+            .setContentText("Usuario o contraseña incorrectos")
+            .setConfirmText("Cerrar")
+            .setConfirmClickListener { dialog -> dialog.dismissWithAnimation() }
+            .show()
     }
     private fun mostrarCampoVacio(mensaje: String) {
         SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)

@@ -83,7 +83,11 @@ class claves : AppCompatActivity() {
                 btnGuardar.isEnabled = true
                 try {
                     val json = JSONObject(texto)
-                    if (json.optBoolean("ok")) mostrarExito()
+                    if (json.optBoolean("ok")) {
+                        // La nueva clave también sirve para entrar sin conexión (se guarda solo el hash)
+                        ConexionDbHelper(this).guardarCredencial(email, clave)
+                        mostrarExito()
+                    }
                     else alerta("No se pudo actualizar", json.optString("msg", "Error desconocido"),
                         SweetAlertDialog.ERROR_TYPE)
                 } catch (e: Exception) {

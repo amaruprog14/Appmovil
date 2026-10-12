@@ -1,6 +1,7 @@
 package com.example.appmovil
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -11,18 +12,16 @@ import android.widget.BaseAdapter
 import android.widget.EditText
 import android.widget.ListView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
-data class Usuario(
-    val rut: String,
-    val nombres: String,
-    val apellidos: String,
-    val email: String
-)
-
+/**
+ * Listado de usuarios (imagen N° 9).
+ * Con Internet la lista viene de MySQL (listar.php) y se guarda en SQLite;
+ * sin Internet se muestra lo guardado en SQLite. El usuario que inició sesión no aparece.
+ */
 class buscar : BaseConexion() {
 
     private lateinit var etBuscar: EditText
@@ -49,8 +48,7 @@ class buscar : BaseConexion() {
         listViewUsuarios.adapter = adapter
 
         listViewUsuarios.setOnItemClickListener { _, _, position, _ ->
-            val usuarioSeleccionado = listaFiltrada[position]
-            abrirDatos(usuarioSeleccionado)
+            abrirDatos(listaFiltrada[position])
         }
 
         etBuscar.addTextChangedListener(object : TextWatcher {
@@ -62,33 +60,60 @@ class buscar : BaseConexion() {
         })
     }
 
-    // <-- AQUÍ: se ejecuta al abrir y al volver desde el detalle
+    // Se ejecuta al abrir y al volver desde el detalle
     override fun onStart() {
         super.onStart()
+        estabaEnLinea = ConexionMonitor.enLinea
+        cargarLocal()               // muestra al tiro lo que hay en el teléfono
+        consultarServidor()           // y si hay Internet, lo actualiza desde MySQL
+    }
+
+    /** Al volver la conexión o terminar una sincronización, la lista se refresca sola. */
+    override fun alCambiarEstado(evento: Int) {
+        val recienConectado = ConexionMonitor.enLinea && !estabaEnLinea
+        estabaEnLinea = ConexionMonitor.enLinea
+        when {
+            evento == ConexionMonitor.EVENTO_SINCRONIZADO || evento == ConexionMonitor.EVENTO_CONFLICTO ||
+                    recienConectado -> consultarServidor()
+            else -> cargarLocal()
+        }
+    }
+
+    private var estabaEnLinea = true
+
+    private fun consultarServidor() {
+        RepositorioUsuarios.actualizarDesdeServidor(this) { error ->
+            if (isFinishing || isDestroyed) return@actualizarDesdeServidor
+            cargarLocal()
+            if (error != null) Toast.makeText(this, error, Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun cargarLocal() {
+        val yo = Sesion.email(this)
         listaCompleta = ConexionDbHelper(this).listar()
+            .filter { yo == null || !it.email.equals(yo, ignoreCase = true) }   // no mostrarse a sí mismo
         filtrarUsuarios(etBuscar.text.toString())
     }
 
+    /** Sin distinguir mayúsculas ni tildes: "jose" encuentra "José". */
     private fun filtrarUsuarios(query: String) {
-        listaFiltrada = if (query.isEmpty()) {
+        val q = Validar.limpiar(query).normalizado()
+        listaFiltrada = if (q.isEmpty()) {
             listaCompleta.toMutableList()
         } else {
             listaCompleta.filter {
-                it.nombres.contains(query, ignoreCase = true) ||
-                        it.apellidos.contains(query, ignoreCase = true) ||
-                        it.rut.contains(query, ignoreCase = true)
+                val completo = "${it.nombres} ${it.apellidos}".normalizado()
+                completo.contains(q) ||
+                        it.nombres.normalizado().contains(q) ||
+                        it.apellidos.normalizado().contains(q)
             }.toMutableList()
         }
         adapter.actualizarLista(listaFiltrada)
     }
 
     private fun abrirDatos(usuario: Usuario) {
-        val intent = Intent(this, datosbuscar::class.java)
-        intent.putExtra("rut", usuario.rut)
-        intent.putExtra("nombres", usuario.nombres)
-        intent.putExtra("apellidos", usuario.apellidos)
-        intent.putExtra("email", usuario.email)
-        startActivity(intent)
+        startActivity(Intent(this, datosbuscar::class.java).putExtra("rut", usuario.rut))
     }
 }
 
@@ -108,12 +133,23 @@ class UsuarioAdapter(private var usuarios: MutableList<Usuario>) : BaseAdapter()
             .inflate(R.layout.item_usuario, parent, false)
 
         val usuario = usuarios[position]
-        val tvNombreCompleto = view.findViewById<TextView>(R.id.tvNombreCompleto)
-        val tvRut = view.findViewById<TextView>(R.id.tvRut)
+        view.findViewById<TextView>(R.id.tvNombreCompleto).text = "${usuario.nombres} ${usuario.apellidos}"
+        view.findViewById<TextView>(R.id.tvRut).text = "${usuario.rut} · ${usuario.email}"
 
-        tvNombreCompleto.text = "${usuario.nombres} ${usuario.apellidos}"
-        tvRut.text = usuario.rut
-
+        val tvEstado = view.findViewById<TextView>(R.id.tvEstado)
+        when {
+            Estado.esConflicto(usuario.estado) -> {
+                tvEstado.visibility = View.VISIBLE
+                tvEstado.setTextColor(Color.parseColor("#D32F2F"))
+                tvEstado.text = "⚠ No sincronizado: ${usuario.error ?: "dato duplicado"}. Toca para corregir."
+            }
+            Estado.esPendiente(usuario.estado) -> {
+                tvEstado.visibility = View.VISIBLE
+                tvEstado.setTextColor(Color.parseColor("#F57C00"))
+                tvEstado.text = "⏳ Pendiente de sincronizar"
+            }
+            else -> tvEstado.visibility = View.GONE
+        }
         return view
     }
 }

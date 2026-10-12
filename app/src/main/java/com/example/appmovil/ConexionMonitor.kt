@@ -15,6 +15,7 @@ object ConexionMonitor {
 
     const val EVENTO_CONEXION = 0       // cambió la conexión o los pendientes
     const val EVENTO_SINCRONIZADO = 1   // el Worker confirmó la sincronización
+    const val EVENTO_CONFLICTO = 2      // el servidor rechazó algún registro pendiente
 
     @Volatile
     var enLinea: Boolean = true
@@ -59,6 +60,16 @@ object ConexionMonitor {
     /** Lo llama el Worker (hilo secundario) cuando el servidor confirmó todo. */
     fun sincronizacionCompletada() {
         main.post { avisar(EVENTO_SINCRONIZADO) }
+    }
+
+    /** Lo llama el Worker cuando el servidor rechazó registros (ej. correo ya existente). */
+    fun conflictosDetectados() {
+        main.post { avisar(EVENTO_CONFLICTO) }
+    }
+
+    /** Hubo un cambio en la base local: refrescar el contador de pendientes en pantalla. */
+    fun notificarCambioLocal() {
+        main.post { avisar(EVENTO_CONEXION) }
     }
 
     fun agregar(escucha: (Int) -> Unit) {
